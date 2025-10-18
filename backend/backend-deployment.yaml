@@ -22,7 +22,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: myacrkrishnakiran2.azurecr.io/backend:latest   # Replace with your ACR image
+#        image: myacrkrishnakiran2.azurecr.io/backend:latest   # Replace with your ACR image
+         image: $(BACKEND_IMAGE)   # <-- Pipeline variable will replace this
         ports:
         - containerPort: 8080
 ---
