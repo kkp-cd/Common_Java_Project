@@ -36,7 +36,7 @@ spec:
   selector:
     app: backend
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
-  type: ClusterIP
+  - protocol: TCP
+    port: 8085          #  external port (client/browser will use this)
+    targetPort: 8080    #  internal container port (your app runs here)
+  type: LoadBalancer
