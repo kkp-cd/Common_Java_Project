@@ -32,7 +32,7 @@ stages:
     # Docker Login to ACR
     - task: AzureCLI@2
       inputs:
-        azureSubscription: krishna-kiran-acr-sp-sc
+        azureSubscription: krishan-kiran-sc
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
