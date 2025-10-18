@@ -1,0 +1,46 @@
+trigger: none
+#  branches:
+#    include:
+#      - main
+
+variables:
+  ACR_NAME: myacrkrishnakiran2
+  BACKEND_IMAGE: $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
+
+stages:
+- stage: BuildAndPush
+  jobs:
+  - job: Backend
+    pool:
+      name: kiran_agent
+    steps:
+    - checkout: self
+
+    # Install Maven if not already installed
+    #- script: |
+    #    if ! command -v mvn >/dev/null; then
+    #      sudo apt-get update && sudo apt-get install -y maven
+    #    fi
+    #  displayName: 'Ensure Maven is Installed'
+
+    # Build Backend JAR
+    - script: |
+        cd backend
+        mvn clean package -DskipTests
+      displayName: 'Build Backend JAR'
+
+    # Docker Login to ACR
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: krishna-kiran-acr-sp-sc
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az acr login --name $(ACR_NAME)
+
+    # Build & Push Docker Image
+    - script: |
+        cd backend
+        docker build -t $(BACKEND_IMAGE) .
+        docker push $(BACKEND_IMAGE)
+      displayName: 'Build and Push Backend Docker Image'
