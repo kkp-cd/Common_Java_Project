@@ -65,5 +65,8 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az aks get-credentials --resource-group $(AKS_RG) --name $(AKS_NAME)
+      # Replace placeholder in YAML with actual image name
+      sed -i "s|\$(BACKEND_IMAGE)|$(BACKEND_IMAGE)|g" $(DEPLOYMENT_FILE)
+
       kubectl apply -f $(DEPLOYMENT_FILE) -n $(AKS_NAMESPACE)
   displayName: 'Deploy Backend to AKS'
