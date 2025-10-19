@@ -40,4 +40,4 @@ spec:
   - protocol: TCP
     port: 8085          #  external port (client/browser will use this)
     targetPort: 8080    #  internal container port (your app runs here)
-  type: LoadBalancer
+  type: ClusterIP
