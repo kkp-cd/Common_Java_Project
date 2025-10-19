@@ -9,6 +9,7 @@ variables:
   FRONTEND_IMAGE: $(ACR_NAME).azurecr.io/frontend:$(Build.BuildId)
   DEPLOYMENT_BACKEND: backend/backend-deployment.yaml
   DEPLOYMENT_FRONTEND: frontend/frontend-deployment.yaml
+  INGRESS:ingress.yaml
   DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
   AKS_SERVICE_CONNECTION: krishan-kiran-AKS
 
@@ -94,3 +95,12 @@ stages:
             kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
             namespace: '$(AKS_NAMESPACE)'
             manifests: '$(DEPLOYMENT_FRONTEND)'
+
+        # Ingress Deployment (must be last)
+        - task: KubernetesManifest@1
+          inputs:
+            action: 'deploy'
+            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
+            namespace: '$(AKS_NAMESPACE)'
+            manifests: '$(INGRESS)'
+          displayName: 'Deploy Ingress'
