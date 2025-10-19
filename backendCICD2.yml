@@ -42,7 +42,7 @@ stages:
         tags: |
           $(Build.BuildId)
       #env:
-      #  DOCKER_CLI_AS_ROOT: 'true'
+      #  DOCKER_CLI_AS_ROOT: 'true' # this is to give sudo permission to docker in agent
 
 
 # Stage 2: Deploy to AKS
