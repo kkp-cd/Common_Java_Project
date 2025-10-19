@@ -5,7 +5,8 @@ pool:
 
 variables:
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
-  SONARQUBE_TOKEN: $(Sonar-Token)
+  #SONARQUBE_TOKEN: $(Sonar-Token)
+  SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
   SONAR_PROJECT_KEY: "Test-Sonar-$(Build.BuildId)"
   SONAR_PROJECT_NAME: "Test-Java-Sonar-$(Build.BuildId)"
 
