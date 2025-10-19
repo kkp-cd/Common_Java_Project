@@ -1,0 +1,30 @@
+trigger: none
+
+pool:
+  name: Azure_Project_VM
+
+steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'clean package'
+- task: SonarQubePrepare@7
+  inputs:
+    SonarQube: '$(Sonar-Token)'
+    scannerMode: 'cli'
+    configMode: 'manual'
+    cliProjectKey: 'test-mvn'
+    cliProjectName: 'mvn-test'
+    cliSources: '.'
+    extraProperties: |
+      # Additional properties that will be passed to the scanner, 
+      # Put one key=value per line, example:
+      # sonar.exclusions=**/*.bin
+      sonar.java.binaries=.
+- task: SonarQubeAnalyze@7
+- task: SonarQubePublish@7
+  inputs:
+    pollingTimeoutSec: '300'
