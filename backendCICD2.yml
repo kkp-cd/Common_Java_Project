@@ -54,11 +54,14 @@ stages:
       name: kiran_agent
     steps:
     - checkout: self
+    - script: |
+        sed -i "s|image:.*|image: $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)|" $(DEPLOYMENT_FILE)
+      displayName: 'Update image tag in manifest file'
     - task: KubernetesManifest@1
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)' # must be AKS connection
         namespace: '$(AKS_NAMESPACE)'
         manifests: '$(DEPLOYMENT_FILE)'
-        containers: |
-          $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
+        #containers: |
+        #  $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
