@@ -49,7 +49,8 @@ stages:
             repository: 'backend'
             command: 'buildAndPush'
             Dockerfile: 'backend/Dockerfile'
-            buildContext: 'backend'
+            #buildContext: 'backend'
+            buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
@@ -61,7 +62,8 @@ stages:
             repository: 'frontend'
             command: 'buildAndPush'
             Dockerfile: 'frontend/Dockerfile'
-            buildContext: 'frontend'
+            #buildContext: 'frontend'
+            buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
