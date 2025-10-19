@@ -30,17 +30,6 @@ stages:
             mavenPomFile: 'pom.xml'      # Parent POM path
             goals: 'clean package -DskipTests=true'
 
-# ================= Stage 2: Docker =================
-- stage: Docker
-  displayName: 'Build and Push Docker Images'
-  dependsOn: Build
-  jobs:
-    - job: DockerBuildPush
-      pool:
-        name: Azure_Project_VM
-      steps:
-        - checkout: self
-
         # Backend Image
         - task: Docker@2
           displayName: 'Build & Push Backend Image'
@@ -49,8 +38,8 @@ stages:
             repository: 'backend'
             command: 'buildAndPush'
             Dockerfile: 'backend/Dockerfile'
-            #buildContext: 'backend'
-            buildContext: '.'           # <-- Use repo root
+            buildContext: 'backend'
+            #buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
@@ -62,8 +51,8 @@ stages:
             repository: 'frontend'
             command: 'buildAndPush'
             Dockerfile: 'frontend/Dockerfile'
-            #buildContext: 'frontend'
-            buildContext: '.'           # <-- Use repo root
+            buildContext: 'frontend'
+            #buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
