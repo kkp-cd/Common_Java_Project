@@ -59,7 +59,7 @@ stages:
 # ================= Stage 3: Deploy =================
 - stage: Deploy
   displayName: 'Deploy Backend and Frontend to AKS'
-  dependsOn: Docker
+  dependsOn: Build
   jobs:
     - job: DeployToAKS
       pool:
