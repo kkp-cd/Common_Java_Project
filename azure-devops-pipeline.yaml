@@ -8,7 +8,7 @@ variables:
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
   SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
 steps:
-- task: Maven@3
+- task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
@@ -47,15 +47,15 @@ steps:
 
     echo "SonarScanner path: $SCANNER_DIR/bin"
 
-    # (Optional) Print version to verify installation
-    sonar-scanner -v
-
-    # Example run (replace values as needed)
+    # 🚫 Prevent branch analysis (Community Edition doesn’t support sonar.branch.name)
     sonar-scanner \
-      -Dsonar.projectKey=your-project-key \
+      -Dsonar.projectKey=Test-Sonar \
+      -Dsonar.projectName=Test-Java-Sonar \
       -Dsonar.sources=. \
+      -Dsonar.java.binaries=. \
       -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
-      -Dsonar.login=$(SONARQUBE_TOKEN)
+      -Dsonar.login=$(SONARQUBE_TOKEN) \
+      -Dsonar.branch.name=   # 👈 this line disables branch analysis
   displayName: 'Download, Install, and Run SonarScanner CLI on Ubuntu'
 - task: SonarQubePublish@7
   inputs:
