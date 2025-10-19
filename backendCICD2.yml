@@ -7,45 +7,59 @@ variables:
   AKS_NAMESPACE: java
   BACKEND_IMAGE: $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
   DEPLOYMENT_FILE: backend/backend-deployment.yaml
-  SERVICE_CONNECTION: krishan-kiran-sc
   DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
   AKS_SERVICE_CONNECTION: krishan-kiran-AKS
+  SERVICE_CONNECTION: krishan-kiran-sc
 
-pool:
-  name: kiran_agent
+stages:
 
-steps:
+# Stage 1: Build & Push
 
-# 1 Checkout Code
-- checkout: self
+- stage: Build
+  displayName: 'Build and Push Docker Image'
+  jobs:
+  - job: BuildAndPush
+    pool:
+      name: kiran_agent
+    steps:
+    - checkout: self
+#  Build Backend JAR
+    - task: Maven@3
+      displayName: 'Build Backend JAR'
+      inputs:
+        mavenPomFile: 'backend/pom.xml'
+        goals: 'clean package -DskipTests=true'
 
-# 2 Build Backend JAR
-- task: Maven@3
-  displayName: 'Build Backend JAR'
-  inputs:
-    mavenPomFile: 'backend/pom.xml'
-    goals: 'clean package -DskipTests=true'
-    publishJUnitResults: false
+#  Build and Push Docker Image to ACR
+    - task: Docker@2
+      displayName: 'Build and Push Backend Image to ACR'
+      inputs:
+        containerRegistry: '$(DOCKER_SERVICE_CONNECTION)'  # must be a Docker/ACR service connection
+        repository: 'backend'
+        command: 'buildAndPush'
+        Dockerfile: 'backend/Dockerfile'
+        buildContext: 'backend'
+        tags: |
+          $(Build.BuildId)
 
-# 3 Build and Push Docker Image to ACR
-- task: Docker@2
-  displayName: 'Build and Push Backend Image to ACR'
-  inputs:
-    containerRegistry: '$(DOCKER_SERVICE_CONNECTION)'   # must be a Docker/ACR service connection
-    repository: 'backend'
-    command: 'buildAndPush'
-    Dockerfile: 'backend/Dockerfile'
-    buildContext: 'backend'
-    tags: |
-      $(Build.BuildId)
 
-# 4 Deploy to AKS
-- task: KubernetesManifest@1
+# Stage 2: Deploy to AKS
+
+- stage: Deploy
   displayName: 'Deploy to AKS'
-  inputs:
-    action: 'deploy'
-    kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'  # must be AKS connection
-    namespace: '$(AKS_NAMESPACE)'
-    manifests: '$(DEPLOYMENT_FILE)'
-    containers: |
-      $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
+  dependsOn: Build
+  jobs:
+  - job: DeployToAKS
+    pool:
+      name: kiran_agent
+    steps:
+    - checkout: self
+    - task: KubernetesManifest@1
+      displayName: 'Deploy to AKS'
+      inputs:
+        action: 'deploy'
+        kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)' # must be AKS connection
+        namespace: '$(AKS_NAMESPACE)'
+        manifests: '$(DEPLOYMENT_FILE)'
+        containers: |
+          $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
