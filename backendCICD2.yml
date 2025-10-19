@@ -55,7 +55,6 @@ stages:
     steps:
     - checkout: self
     - task: KubernetesManifest@1
-      displayName: 'Deploy to AKS'
       inputs:
         action: 'deploy'
         kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)' # must be AKS connection
