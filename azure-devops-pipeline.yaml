@@ -2,10 +2,8 @@ trigger: none
 
 
 pool:
-  name: Azure_Project_VM
+  name: Sachin_agent
 
-variables:
-  Build.SourceBranchName: ''   # prevents sonar.branch.name from being injected
 
 steps:
 - task: Maven@3
