@@ -16,8 +16,8 @@ steps:
     SonarQube: 'Sonar-AZD'
     scannerMode: 'cli'
     configMode: 'manual'
-    cliProjectKey: 'test-mvn'
-    cliProjectName: 'mvn-test'
+    cliProjectKey: 'test-mvn1'
+    cliProjectName: 'mvn-test1'
     cliSources: '.'
     extraProperties: |
       # Additional properties that will be passed to the scanner, 
