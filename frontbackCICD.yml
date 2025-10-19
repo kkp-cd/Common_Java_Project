@@ -9,7 +9,7 @@ variables:
   FRONTEND_IMAGE: $(ACR_NAME).azurecr.io/frontend:$(Build.BuildId)
   DEPLOYMENT_BACKEND: backend/backend-deployment.yaml
   DEPLOYMENT_FRONTEND: frontend/frontend-deployment.yaml
-  INGRESS:ingress.yaml
+  INGRESS: ingress.yaml
   DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
   AKS_SERVICE_CONNECTION: krishan-kiran-AKS
 
