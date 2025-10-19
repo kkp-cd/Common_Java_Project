@@ -32,7 +32,8 @@ steps:
 # Run the scanner manually to bypass Azure DevOps branch injection
 - script: |
     echo "Running SonarQube scanner manually..."
-    sonar-scanner \
+    /opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
+      -Dsonar.sources=. \
       -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
       -Dsonar.login=$(SONARQUBE_TOKEN)
   displayName: 'Run SonarQube Scanner Manually'
