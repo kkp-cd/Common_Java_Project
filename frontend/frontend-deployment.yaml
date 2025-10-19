@@ -23,10 +23,11 @@ spec:
       containers:
         - name: frontend
           image: frontend:latest 
-          #image: $(frontend_IMAGE)   # Pipeline variable will replace this
-          #image: myacrkrishnakiran2.azurecr.io/frontend:latest   # Replace with your ACR image
           ports:
             - containerPort: 8080
+          env:
+            - name: BACKEND
+              value: http://backend-service:8080
 ---
 apiVersion: v1
 kind: Service
