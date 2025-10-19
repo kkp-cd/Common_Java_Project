@@ -7,6 +7,6 @@ CMD java -Dapi.host.baseurl=${BACKEND} -jar target/frontend.jar
 
 
 # Use BACKEND env variable (added by Krishna team)
-ENV BACKEND_URL=http://backend-service:8080
+#ENV BACKEND_URL=http://backend-service:8080
 
-CMD java -Dapi.host.baseurl=${BACKEND_URL} -jar target/frontend.jar
+#CMD java -Dapi.host.baseurl=${BACKEND_URL} -jar target/frontend.jar
