@@ -1,28 +1,63 @@
 trigger: none
 
+
 pool:
   name: Azure_Project_VM
 
 variables:
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
+  # SONARQUBE_TOKEN: $(Sonar-Token)
   SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
   SONAR_PROJECT_KEY: "Test-Sonar-$(Build.BuildId)"
   SONAR_PROJECT_NAME: "Test-Java-Sonar-$(Build.BuildId)"
 
+
 steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'package'
+
 - task: SonarQubePrepare@7
   inputs:
     SonarQube: 'Sonar-AZD'
     scannerMode: 'Other'
     configMode: 'manual'
-    cliProjectKey: Test-Sonar-$(Build.BuildId)
-    cliProjectName: Test-Java-Sonar-$(Build.BuildId)
+    cliProjectKey: '$(SONAR_PROJECT_KEY)'
+    cliProjectName: '$(SONAR_PROJECT_NAME)'
     cliSources: '.'
 
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'package sonar:sonar'
+# --- DOWNLOAD, INSTALL, AND RUN SONARSCANNER CLI ON UBUNTU ---
+- script: |
+    echo "Downloading SonarScanner CLI..."
+    SCANNER_VERSION="5.0.1.3006"
+    DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
+    INSTALL_PATH="$(Agent.TempDirectory)/sonar-scanner"
+
+  # Download and unzip
+  #  mkdir -p "$INSTALL_PATH"
+    wget -q "$DOWNLOAD_URL" -O sonar-scanner.zip
+    unzip -q sonar-scanner.zip -d "$INSTALL_PATH"
+
+  # Find scanner directory and add to PATH
+    SCANNER_DIR=$(find "$INSTALL_PATH" -type d -name "sonar-scanner-*")
+    export PATH="$SCANNER_DIR/bin:$PATH"
+
+  # echo "SonarScanner path: $SCANNER_DIR/bin"
+
+  # Prevent branch analysis (Community Edition doesn’t support sonar.branch.name)
+    sonar-scanner \
+      -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+      -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
+      -Dsonar.sources=. \
+      -Dsonar.java.binaries=. \
+      -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
+      -Dsonar.login=$(SONARQUBE_TOKEN) \
+      -Dsonar.branch.name=   # this line disables branch analysis
+  displayName: 'Download, Install, and Run SonarScanner CLI on Ubuntu'
 
 - task: SonarQubePublish@7
   inputs:
