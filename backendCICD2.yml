@@ -1,0 +1,51 @@
+trigger: none
+
+variables:
+  ACR_NAME: myacrkrishnakiran2
+  AKS_RG: krishna-kiran
+  AKS_NAME: aks-krishna-kiran
+  AKS_NAMESPACE: java
+  BACKEND_IMAGE: $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
+  DEPLOYMENT_FILE: backend/backend-deployment.yaml
+  SERVICE_CONNECTION: krishan-kiran-sc
+  DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
+  AKS_SERVICE_CONNECTION: krishan-kiran-AKS
+
+pool:
+  name: kiran_agent
+
+steps:
+
+# 1 Checkout Code
+- checkout: self
+
+# 2 Build Backend JAR
+- task: Maven@3
+  displayName: 'Build Backend JAR'
+  inputs:
+    mavenPomFile: 'backend/pom.xml'
+    goals: 'clean package -DskipTests=true'
+    publishJUnitResults: false
+
+# 3 Build and Push Docker Image to ACR
+- task: Docker@2
+  displayName: 'Build and Push Backend Image to ACR'
+  inputs:
+    containerRegistry: '$(DOCKER_SERVICE_CONNECTION)'   # must be a Docker/ACR service connection
+    repository: 'backend'
+    command: 'buildAndPush'
+    Dockerfile: 'backend/Dockerfile'
+    buildContext: 'backend'
+    tags: |
+      $(Build.BuildId)
+
+# 4 Deploy to AKS
+- task: KubernetesManifest@1
+  displayName: 'Deploy to AKS'
+  inputs:
+    action: 'deploy'
+    kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'  # must be AKS connection
+    namespace: '$(AKS_NAMESPACE)'
+    manifests: '$(DEPLOYMENT_FILE)'
+    containers: |
+      $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
