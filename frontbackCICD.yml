@@ -1,0 +1,105 @@
+trigger: none
+
+variables:
+  ACR_NAME: myacrkrishnakiran2
+  AKS_RG: krishna-kiran
+  AKS_NAME: aks-krishna-kiran
+  AKS_NAMESPACE: java
+  BACKEND_IMAGE: $(ACR_NAME).azurecr.io/backend:$(Build.BuildId)
+  FRONTEND_IMAGE: $(ACR_NAME).azurecr.io/frontend:$(Build.BuildId)
+  DEPLOYMENT_BACKEND: backend/backend-deployment.yaml
+  DEPLOYMENT_FRONTEND: frontend/frontend-deployment.yaml
+  DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
+  AKS_SERVICE_CONNECTION: krishan-kiran-AKS
+
+stages:
+
+# ================= Stage 1: Build =================
+- stage: Build
+  displayName: 'Build Backend and Frontend JARs'
+  jobs:
+    - job: MavenBuild
+      pool:
+        name: Azure_Project_VM
+      steps:
+        - checkout: self
+        # Build both frontend and backend
+        - task: Maven@3
+          displayName: 'Build All Modules (Parent POM)'
+          inputs:
+            mavenPomFile: 'pom.xml'      # Parent POM path
+            goals: 'clean package -DskipTests=true'
+
+# ================= Stage 2: Docker =================
+- stage: Docker
+  displayName: 'Build and Push Docker Images'
+  dependsOn: Build
+  jobs:
+    - job: DockerBuildPush
+      pool:
+        name: Azure_Project_VM
+      steps:
+        - checkout: self
+
+        # Backend Image
+        - task: Docker@2
+          displayName: 'Build & Push Backend Image'
+          inputs:
+            containerRegistry: '$(DOCKER_SERVICE_CONNECTION)'
+            repository: 'backend'
+            command: 'buildAndPush'
+            Dockerfile: 'backend/Dockerfile'
+            buildContext: 'backend'
+            tags: |
+              $(Build.BuildId)
+
+        # Frontend Image
+        - task: Docker@2
+          displayName: 'Build & Push Frontend Image'
+          inputs:
+            containerRegistry: '$(DOCKER_SERVICE_CONNECTION)'
+            repository: 'frontend'
+            command: 'buildAndPush'
+            Dockerfile: 'frontend/Dockerfile'
+            buildContext: 'frontend'
+            tags: |
+              $(Build.BuildId)
+
+# ================= Stage 3: Deploy =================
+- stage: Deploy
+  displayName: 'Deploy Backend and Frontend to AKS'
+  dependsOn: Docker
+  jobs:
+    - job: DeployToAKS
+      pool:
+        name: Azure_Project_VM
+      steps:
+        - checkout: self
+
+        # Replace backend image in manifest
+        - script: |
+            sed -i "s|image:.*|image: $(BACKEND_IMAGE)|" $(DEPLOYMENT_BACKEND)
+          displayName: 'Update Backend Image Tag'
+
+        # Replace frontend image in manifest
+        - script: |
+            sed -i "s|image:.*|image: $(FRONTEND_IMAGE)|" $(DEPLOYMENT_FRONTEND)
+          displayName: 'Update Frontend Image Tag'
+
+        # Deploy Backend
+        - task: KubernetesManifest@1
+          displayName: 'Deploy Backend to AKS'
+          inputs:
+            action: 'deploy'
+            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
+            namespace: '$(AKS_NAMESPACE)'
+            manifests: '$(DEPLOYMENT_BACKEND)'
+
+        # Deploy Frontend
+        - task: KubernetesManifest@1
+          displayName: 'Deploy Frontend to AKS'
+          inputs:
+            action: 'deploy'
+            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
+            namespace: '$(AKS_NAMESPACE)'
+            manifests: '$(DEPLOYMENT_FRONTEND)'
