@@ -41,8 +41,8 @@ stages:
         buildContext: 'backend'
         tags: |
           $(Build.BuildId)
-      env:
-        DOCKER_CLI_AS_ROOT: 'true'
+      #env:
+      #  DOCKER_CLI_AS_ROOT: 'true'
 
 
 # Stage 2: Deploy to AKS
