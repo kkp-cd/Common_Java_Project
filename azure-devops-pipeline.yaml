@@ -1,39 +1,33 @@
 trigger: none
 
+
 pool:
   name: Azure_Project_VM
 
 steps:
-- task: Maven@4
+- task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'clean package'
+    goals: 'package'
 - task: SonarQubePrepare@7
   inputs:
     SonarQube: 'Sonar-AZD'
     scannerMode: 'cli'
     configMode: 'manual'
-    cliProjectKey: 'test-mvn1'
-    cliProjectName: 'mvn-test1'
+    cliProjectKey: 'Test-Sonar'
+    cliProjectName: 'Test-Java-Sonar'
     cliSources: '.'
     extraProperties: |
       # Additional properties that will be passed to the scanner, 
       # Put one key=value per line, example:
       # sonar.exclusions=**/*.bin
       sonar.java.binaries=.
-
-- script: |
-    echo "SONARQUBE_SCANNER_PARAMS=$SONARQUBE_SCANNER_PARAMS"
-  displayName: 'Debug Scanner Params'
-
-- script: |
-    echo "##vso[task.setvariable variable=SONARQUBE_SCANNER_PARAMS]{}"
-  displayName: 'Clear Scanner Params'
-
 - task: SonarQubeAnalyze@7
+  inputs:
+    jdkversion: 'JAVA_HOME'
 - task: SonarQubePublish@7
   inputs:
     pollingTimeoutSec: '300'
