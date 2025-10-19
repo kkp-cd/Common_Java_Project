@@ -20,7 +20,7 @@ stages:
   jobs:
   - job: BuildAndPush
     pool:
-      name: kiran_agent
+      name: Azure_Project_VM
     steps:
     - checkout: self
 #  Build Backend JAR
@@ -51,7 +51,7 @@ stages:
   jobs:
   - job: DeployToAKS
     pool:
-      name: kiran_agent
+      name: Azure_Project_VM
     steps:
     - checkout: self
     - script: |
