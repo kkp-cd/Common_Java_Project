@@ -27,16 +27,36 @@ steps:
       # Additional properties that will be passed to the scanner, 
       # Put one key=value per line, example:
       # sonar.exclusions=**/*.bin
-      sonar.java.binaries=.
+      #sonar.java.binaries=.
 
-# Run the scanner manually to bypass Azure DevOps branch injection
+# --- DOWNLOAD, INSTALL, AND RUN SONARSCANNER CLI ON UBUNTU ---
 - script: |
-    echo "Running SonarQube scanner manually..."
-    /opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
+    echo "Downloading SonarScanner CLI..."
+    SCANNER_VERSION="5.0.1.3006"
+    DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
+    INSTALL_PATH="$(Agent.TempDirectory)/sonar-scanner"
+
+    # Download and unzip
+    mkdir -p "$INSTALL_PATH"
+    wget -q "$DOWNLOAD_URL" -O sonar-scanner.zip
+    unzip -q sonar-scanner.zip -d "$INSTALL_PATH"
+
+    # Find scanner directory and add to PATH
+    SCANNER_DIR=$(find "$INSTALL_PATH" -type d -name "sonar-scanner-*")
+    export PATH="$SCANNER_DIR/bin:$PATH"
+
+    echo "SonarScanner path: $SCANNER_DIR/bin"
+
+    # (Optional) Print version to verify installation
+    sonar-scanner -v
+
+    # Example run (replace values as needed)
+    sonar-scanner \
+      -Dsonar.projectKey=your-project-key \
       -Dsonar.sources=. \
       -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
       -Dsonar.login=$(SONARQUBE_TOKEN)
-  displayName: 'Run SonarQube Scanner Manually'
+  displayName: 'Download, Install, and Run SonarScanner CLI on Ubuntu'
 - task: SonarQubePublish@7
   inputs:
     pollingTimeoutSec: '300'
