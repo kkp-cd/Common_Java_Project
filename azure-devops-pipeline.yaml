@@ -2,7 +2,7 @@ trigger: none
 
 
 pool:
-  name: Sachin_agent
+  name: Azure_Project_VM
 
 variables:
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
