@@ -24,9 +24,14 @@ steps:
       # Put one key=value per line, example:
       # sonar.exclusions=**/*.bin
       sonar.java.binaries=.
+
 - script: |
     echo "SONARQUBE_SCANNER_PARAMS=$SONARQUBE_SCANNER_PARAMS"
   displayName: 'Debug Scanner Params'
+
+- script: |
+    echo "##vso[task.setvariable variable=SONARQUBE_SCANNER_PARAMS]{}"
+  displayName: 'Clear Scanner Params'
 
 - task: SonarQubeAnalyze@7
 - task: SonarQubePublish@7
