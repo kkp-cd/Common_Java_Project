@@ -14,7 +14,7 @@ steps:
 - task: SonarQubePrepare@7
   inputs:
     SonarQube: 'Sonar-AZD'
-    scannerMode: 'MSBuild'  # or 'CLI' if you prefer
+    scannerMode: 'cli'  # or 'CLI' if you prefer
     configMode: 'manual'
     cliProjectKey: 'Test-Sonar-$(Build.BuildId)'
     cliProjectName: 'Test-Java-Sonar-$(Build.BuildId)'
