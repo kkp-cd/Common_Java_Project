@@ -13,7 +13,7 @@ steps:
     goals: 'clean package'
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: '$(Sonar-Token)'
+    SonarQube: 'Sonar-AZD'
     scannerMode: 'cli'
     configMode: 'manual'
     cliProjectKey: 'test-mvn'
