@@ -120,36 +120,32 @@ stages:
     displayName: 'Deploy to AKS with Ingress'
     dependsOn: Containerize
     jobs:
-      - deployment: DeployToAKS
-        displayName: 'Deploy Frontend, Backend, and Ingress'
-        environment: 'aks-production'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - checkout: none
-                # Replace placeholders in YAMLs
-                - script: |
-                    echo "Updating image tags in Kubernetes manifests..."
-                    sed -i "s|<IMAGE_TAG>|$(Build.BuildId)|g" k8s/frontend-deployment.yaml
-                    sed -i "s|<IMAGE_TAG>|$(Build.BuildId)|g" k8s/backend-deployment.yaml
-                    echo "YAML update complete."
-                  displayName: 'Inject image tag into manifests'
+      - job: DeployToAKS
+        displayName: "Deploy Kubernetes manifests to AKS"
+        steps:
+          - checkout: none
+          # Replace placeholders in YAMLs
+          - script: |
+              echo "Updating image tags in Kubernetes manifests..."
+              sed -i "s|<IMAGE_TAG>|$(Build.BuildId)|g" k8s/frontend-deployment.yaml
+              sed -i "s|<IMAGE_TAG>|$(Build.BuildId)|g" k8s/backend-deployment.yaml
+              echo "YAML update complete."
+            displayName: 'Inject image tag into manifests'
 
-                # Apply manifests to AKS
-                - task: Kubernetes@1
-                  displayName: 'Apply all manifests to AKS'
-                  inputs:
-                    connectionType: 'Azure Resource Manager'
-                    azureSubscription: 'AKS-Connection-sac'   # your AKS service connection
-                    azureResourceGroup: 'krishna-sachin'
-                    kubernetesCluster: 'aks-krishna-sachin'
-                    #namespace: 'production'
-                    command: 'apply'
-                    useConfigurationFile: true
-                    configuration: |
-                      # k8s/namespace.yaml
-                      k8s/backend-deployment.yaml
-                      k8s/frontend-deployment.yaml
-                      k8s/ingress.yaml
+          # Apply manifests to AKS
+          - task: Kubernetes@1
+            displayName: 'Apply all manifests to AKS'
+            inputs:
+              connectionType: 'Azure Resource Manager'
+              kubernetesServiceConnection: 'AKS-Connection-sac'   # your AKS service connection
+              azureResourceGroup: 'krishna-sachin'
+              kubernetesCluster: 'aks-krishna-sachin'
+              namespace: 'default'
+              command: 'apply'
+              useConfigurationFile: true
+              configuration: |
+                # k8s/namespace.yaml
+                k8s/backend-deployment.yaml
+                k8s/frontend-deployment.yaml
+                k8s/ingress.yaml
 
