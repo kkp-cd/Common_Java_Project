@@ -93,6 +93,7 @@ stages:
     jobs:
       - job: DockerBuild
         steps:
+          - checkout: none
           - task: Docker@2
             displayName: 'Build frontend and Push image to ACR'
             inputs:
