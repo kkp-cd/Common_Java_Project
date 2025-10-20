@@ -13,6 +13,12 @@ variables:
   DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
   AKS_SERVICE_CONNECTION: krishan-kiran-AKS
 
+  SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
+  # SONARQUBE_TOKEN: $(Sonar-Token)
+  SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
+  SONAR_PROJECT_KEY: "Test-Sonar-$(Build.BuildId)"
+  SONAR_PROJECT_NAME: "Test-Java-Sonar-$(Build.BuildId)"
+
 stages:
 
 # ================= Stage 1: Build =================
@@ -25,11 +31,67 @@ stages:
       steps:
         - checkout: self
         # Build both frontend and backend
-        - task: Maven@3
+        - task: Maven@4
           displayName: 'Build All Modules (Parent POM)'
           inputs:
             mavenPomFile: 'pom.xml'      # Parent POM path
             goals: 'clean package -DskipTests=true'
+
+        - task: SonarQubePrepare@7
+          inputs:
+            SonarQube: 'Sonar-AZD'
+            scannerMode: 'Other'
+            configMode: 'manual'
+            cliProjectKey: '$(SONAR_PROJECT_KEY)'
+            cliProjectName: '$(SONAR_PROJECT_NAME)'
+            cliSources: '.'
+
+        # --- DOWNLOAD, INSTALL, AND RUN SONARSCANNER CLI ON UBUNTU ---
+        - script: |
+            echo "Downloading SonarScanner CLI..."
+            SCANNER_VERSION="5.0.1.3006"
+            DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
+            INSTALL_PATH="$(Agent.TempDirectory)/sonar-scanner"
+            
+            # Download and unzip
+            # mkdir -p "$INSTALL_PATH"
+            wget -q "$DOWNLOAD_URL" -O sonar-scanner.zip
+            unzip -q sonar-scanner.zip -d "$INSTALL_PATH"
+
+            # Find scanner directory and add to PATH
+            SCANNER_DIR=$(find "$INSTALL_PATH" -type d -name "sonar-scanner-*")
+            export PATH="$SCANNER_DIR/bin:$PATH"
+
+            # echo "SonarScanner path: $SCANNER_DIR/bin"
+            # Prevent branch analysis (Community Edition doesn’t support sonar.branch.name)
+            sonar-scanner \
+              -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+              -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
+              -Dsonar.sources=. \
+              -Dsonar.java.binaries=. \
+              -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
+              -Dsonar.login=$(SONARQUBE_TOKEN) \
+              -Dsonar.branch.name=   # this line disables branch analysis
+          displayName: 'Download, Install, and Run SonarScanner CLI on Ubuntu'
+
+        - task: SonarQubePublish@7
+          inputs:
+            pollingTimeoutSec: '300'
+
+        # publish the artifact
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: 'frontend/target'
+            ArtifactName: 'frontend-drop'
+            publishLocation: 'Container'
+          displayName: 'Publish Frontend Artifact'
+
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: 'backend/target'
+            ArtifactName: 'backend-drop'
+            publishLocation: 'Container'
+          displayName: 'Publish Backend Artifact'
 
         # Backend Image
         - task: Docker@2
@@ -40,7 +102,7 @@ stages:
             command: 'buildAndPush'
             Dockerfile: 'backend/Dockerfile'
             buildContext: 'backend'
-            #buildContext: '.'           # <-- Use repo root
+            # buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
@@ -53,7 +115,7 @@ stages:
             command: 'buildAndPush'
             Dockerfile: 'frontend/Dockerfile'
             buildContext: 'frontend'
-            #buildContext: '.'           # <-- Use repo root
+            # buildContext: '.'           # <-- Use repo root
             tags: |
               $(Build.BuildId)
 
