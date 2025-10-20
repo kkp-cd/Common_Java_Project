@@ -159,10 +159,10 @@ stages:
             manifests: '$(DEPLOYMENT_FRONTEND)'
 
         # Ingress Deployment (must be last)
-        - task: KubernetesManifest@1
-          inputs:
-            action: 'deploy'
-            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
-            namespace: '$(AKS_NAMESPACE)'
-            manifests: '$(INGRESS)'
-          displayName: 'Deploy Ingress'
+        #- task: KubernetesManifest@1
+        #  inputs:
+        #    action: 'deploy'
+        #    kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
+        #    namespace: '$(AKS_NAMESPACE)'
+        #    manifests: '$(INGRESS)'
+        #  displayName: 'Deploy Ingress'
