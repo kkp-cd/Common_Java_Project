@@ -50,7 +50,7 @@ steps:
 
     # Prevent branch analysis (Community Edition doesn’t support sonar.branch.name)
     sonar-scanner \
-      #-Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+      -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
       #-Dsonar.projectName=$(SONAR_PROJECT_NAME) \
       -Dsonar.sources=. \
       -Dsonar.java.binaries=. \
