@@ -45,8 +45,8 @@ stages:
               DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
               INSTALL_PATH="$(Agent.TempDirectory)/sonar-scanner"
 
-            # Download and unzip
-            #  mkdir -p "$INSTALL_PATH"
+              # Download and unzip
+              #  mkdir -p "$INSTALL_PATH"
               wget -q "$DOWNLOAD_URL" -O sonar-scanner.zip
               unzip -q sonar-scanner.zip -d "$INSTALL_PATH"
 
