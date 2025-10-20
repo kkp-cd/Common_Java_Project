@@ -119,7 +119,7 @@ stages:
             tags: |
               $(Build.BuildId)
 
-# ================= Stage 3: Deploy =================
+# ================= Stage 2: Deploy =================
 - stage: Deploy
   displayName: 'Deploy Backend and Frontend to AKS'
   dependsOn: Build
