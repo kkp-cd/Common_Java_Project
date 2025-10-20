@@ -7,7 +7,7 @@ pool:
 variables:
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
   # SONARQUBE_TOKEN: $(Sonar-Token)
-  SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
+  #SONARQUBE_TOKEN: squ_437664680ac09398422b376153585e3d2efd5a86
   SONAR_PROJECT_KEY: "Test-Sonar-$(Build.BuildId)"
   SONAR_PROJECT_NAME: "Test-Java-Sonar-$(Build.BuildId)"
 
@@ -37,8 +37,8 @@ steps:
     DOWNLOAD_URL="https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_VERSION}-linux.zip"
     INSTALL_PATH="$(Agent.TempDirectory)/sonar-scanner"
 
-    # Download and unzip
-    #  mkdir -p "$INSTALL_PATH"
+     # Download and unzip
+     #  mkdir -p "$INSTALL_PATH"
     wget -q "$DOWNLOAD_URL" -O sonar-scanner.zip
     unzip -q sonar-scanner.zip -d "$INSTALL_PATH"
 
@@ -50,12 +50,12 @@ steps:
 
     # Prevent branch analysis (Community Edition doesn’t support sonar.branch.name)
     sonar-scanner \
-      -Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
-      -Dsonar.projectName=$(SONAR_PROJECT_NAME) \
+      #-Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+      #-Dsonar.projectName=$(SONAR_PROJECT_NAME) \
       -Dsonar.sources=. \
       -Dsonar.java.binaries=. \
       -Dsonar.host.url=$(SONARQUBE_HOST_URL) \
-      -Dsonar.login=$(SONARQUBE_TOKEN) \
+      -Dsonar.login=$(Sonar-Token) #$(SONARQUBE_TOKEN) \
       -Dsonar.branch.name=   # this line disables branch analysis
   displayName: 'Download, Install, and Run SonarScanner CLI on Ubuntu'
 
