@@ -144,11 +144,11 @@ stages:
                     azureSubscription: 'AKS-Connection-sac'   # your AKS service connection
                     azureResourceGroup: 'krishna-sachin'
                     kubernetesCluster: 'aks-krishna-sachin'
-                    namespace: 'production'
+                    #namespace: 'production'
                     command: 'apply'
                     useConfigurationFile: true
                     configuration: |
-                      k8s/namespace.yaml
+                      # k8s/namespace.yaml
                       k8s/backend-deployment.yaml
                       k8s/frontend-deployment.yaml
                       k8s/ingress.yaml
