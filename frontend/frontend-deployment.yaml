@@ -39,6 +39,6 @@ spec:
     app: frontend
   ports:
   - protocol: TCP
-    port: 8084          #  external port (client/browser will use this)
+    port: 80          #  external port (client/browser will use this if you use LB with port 8084)
     targetPort: 8080    #  internal container port (your app runs here)
   type: ClusterIP
