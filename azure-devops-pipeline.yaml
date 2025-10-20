@@ -16,7 +16,7 @@ variables:
 # Stage 1: Build, Scan & Publish Artifacts
 
 stages:
-  - stage: Build Artifact and Scan with SonarQube
+  - stage: Build
     displayName: 'Build Scan and Publish Artifacts'
     jobs:
       - job: BuildJob
