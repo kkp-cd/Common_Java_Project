@@ -14,7 +14,7 @@ spec:
   ingressClassName: nginx
   rules:
     # Define HTTP routes
-    - host: "*"
+    #- host: "*"
       http:    #note: this must be a list item (with "-")
         paths:
           # Frontend route
