@@ -1,5 +1,5 @@
 # This file is safe to deploy via Azure DevOps pipeline
-# Prerequisite: ingress-nginx Helm chart installed in the cluster
+# Prerequisite: ingress-nginx Helm chart already installed in cluster
 # Access via the external IP assigned to ingress-nginx LoadBalancer
 
 apiVersion: networking.k8s.io/v1
@@ -13,9 +13,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    # Define domain for the ingress
-    #- host: myapp.example.com
-      http:
+    # Define HTTP routes
+    - http:    #note: this must be a list item (with "-")
         paths:
           # Frontend route
           - path: /
