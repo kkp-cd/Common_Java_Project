@@ -64,5 +64,5 @@ steps:
     pollingTimeoutSec: '300'
 
   # Publish build artifact (JAR)
-- publish: 'target/*.jar'
+- publish: '*/target/*.jar'
   artifact: 'drop'
