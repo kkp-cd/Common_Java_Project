@@ -136,7 +136,7 @@ stages:
           - task: Kubernetes@1
             displayName: 'Apply all manifests to AKS'
             inputs:
-              connectionType: 'Azure Resource Manager'
+              connectionType: 'Kubernetes Service Connection'
               kubernetesServiceConnection: 'AKS-Connection-sac'   # your AKS service connection
               azureResourceGroup: 'krishna-sachin'
               kubernetesCluster: 'aks-krishna-sachin'
