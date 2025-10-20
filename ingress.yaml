@@ -9,16 +9,17 @@ metadata:
   namespace: java
   annotations:
     kubernetes.io/ingress.class: "nginx"  # Ensure NGINX handles this ingress
-    nginx.ingress.kubernetes.io/rewrite-target: /  # Optional: rewrite paths if needed
+    #nginx.ingress.kubernetes.io/rewrite-target: /  # Optional: rewrite paths if needed
 spec:
   ingressClassName: nginx
   rules:
     # Define HTTP routes
-    - http:    #note: this must be a list item (with "-")
+    - host: "*"
+      http:    #note: this must be a list item (with "-")
         paths:
           # Frontend route
           - path: /
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: frontend-service
@@ -27,7 +28,7 @@ spec:
 
           # Backend route
           - path: /docs
-            pathType: Prefix
+            pathType: Exact
             backend:
               service:
                 name: backend-service
