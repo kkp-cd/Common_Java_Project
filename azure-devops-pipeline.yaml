@@ -107,7 +107,7 @@ stages:
             displayName: 'Build backend and Push image to ACR'
             inputs:
               containerRegistry: 'ACR-SAC'       # Azure DevOps service connection name
-              repository: '$(backendendName)'      # Repository name in ACR
+              repository: '$(backendName)'      # Repository name in ACR
               command: 'buildAndPush'
               Dockerfile: 'backend/Dockerfile'
               tags: |
