@@ -137,7 +137,8 @@ stages:
             displayName: 'Apply all manifests to AKS'
             inputs:
               connectionType: 'Kubernetes Service Connection'
-              kubernetesServiceConnection: 'AKS-Connection-sac'   # your AKS service connection
+              #kubernetesServiceConnection: 'AKS-Connection-sac'   # your AKS service connection
+              kubernetesServiceEndpoint: 'AKS-Connection-sac'
               azureResourceGroup: 'krishna-sachin'
               kubernetesCluster: 'aks-krishna-sachin'
               namespace: 'default'
