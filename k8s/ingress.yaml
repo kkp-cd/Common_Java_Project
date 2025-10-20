@@ -2,13 +2,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: app-ingress
-  namespace: production
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  #namespace: production
+  #annotations:
+  #  kubernetes.io/ingress.class: nginx
 spec:
+  ingressClassName: nginx
   rules:
-    - host: "" # Change to your DNS name
-      http:
+    #- host: "" # Change to your DNS name
+    - http:
         paths:
           - path: /
             pathType: Prefix
