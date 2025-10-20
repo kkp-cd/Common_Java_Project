@@ -103,4 +103,12 @@ stages:
               Dockerfile: 'frontend/Dockerfile'
               tags: |
                 $(Build.BuildId)
-
+          - task: Docker@2
+            displayName: 'Build backend and Push image to ACR'
+            inputs:
+              containerRegistry: 'ACR-SAC'       # Azure DevOps service connection name
+              repository: '$(backendendName)'      # Repository name in ACR
+              command: 'buildAndPush'
+              Dockerfile: 'backend/Dockerfile'
+              tags: |
+                $(Build.BuildId)
