@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: sacdockerzure.azurecr.io/backend:<IMAGE_TAG>
+          image: myacrkrishnasachin30.azurecr.io/backend:<IMAGE_TAG>
           ports:
             - containerPort: 8080
 ---
