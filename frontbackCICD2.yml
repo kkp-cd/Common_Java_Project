@@ -95,7 +95,7 @@ stages:
           displayName: 'Test AKS Service Connection'
           inputs:
             connectionType: 'Kubernetes Service Connection'
-            kubernetesServiceEndpoint: '<your-service-connection-name>'
+            kubernetesServiceEndpoint: '$(AKS_SERVICE_CONNECTION)'
             command: 'kubectl'
             arguments: 'get nodes'
 
