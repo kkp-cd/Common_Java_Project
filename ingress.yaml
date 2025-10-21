@@ -15,7 +15,7 @@ spec:
   rules:
     # Define HTTP routes
     #- host: "*"
-      http:    #note: this must be a list item (with "-")
+    - http:    #note: this must be a list item (with "-")
         paths:
           # Frontend route
           - path: /
