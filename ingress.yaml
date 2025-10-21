@@ -19,7 +19,7 @@ spec:
         paths:
           # Frontend route
           - path: /
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: frontend-service
@@ -28,7 +28,7 @@ spec:
 
           # Backend route
           - path: /docs
-            pathType: Exact
+            pathType: Prefix
             backend:
               service:
                 name: backend-service
