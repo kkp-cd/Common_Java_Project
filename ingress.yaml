@@ -40,3 +40,4 @@ spec:
   #   - hosts:
   #       - myapp.example.com
   #     secretName: myapp-tls-secret
+  #	kubectl annotate svc ingress-nginx-controller service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path=/healthz -n java -->One time manully run command
