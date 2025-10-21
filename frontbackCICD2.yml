@@ -11,7 +11,7 @@ variables:
   DEPLOYMENT_FRONTEND: frontend/frontend-deployment.yaml
   INGRESS: ingress.yaml
   DOCKER_SERVICE_CONNECTION: krishna-kiran-acr-sp-sc
-  AKS_SERVICE_CONNECTION: krishan-kiran-AKS
+  AKS_SERVICE_CONNECTION: krishan-kiran-AKS2
 
   SONARQUBE_HOST_URL: "http://52.234.35.11:9000"
   # SONARQUBE_TOKEN: $(Sonar-Token)
