@@ -17,7 +17,7 @@ spec:
         - name: frontend
           image: myacrkrishnasachin30.azurecr.io/frontend:<IMAGE_TAG>
           ports:
-            - containerPort: 8080
+            - containerPort: 8085
 ---
 apiVersion: v1
 kind: Service
@@ -29,5 +29,5 @@ spec:
     app: frontend
   ports:
     - port: 8080   # expose 8080
-      targetPort: 8080
+      targetPort: 8085
   type: ClusterIP
