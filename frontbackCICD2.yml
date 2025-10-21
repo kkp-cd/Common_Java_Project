@@ -91,6 +91,15 @@ stages:
       steps:
         - checkout: self
 
+        - task: Kubernetes@1
+          displayName: 'Test AKS Service Connection'
+          inputs:
+            connectionType: 'Kubernetes Service Connection'
+            kubernetesServiceEndpoint: '<your-service-connection-name>'
+            command: 'kubectl'
+            arguments: 'get nodes'
+
+
         # Replace backend image in manifest
         - script: |
             sed -i "s|image:.*|image: $(BACKEND_IMAGE)|" $(DEPLOYMENT_BACKEND)
