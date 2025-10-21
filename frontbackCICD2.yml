@@ -97,7 +97,7 @@ stages:
             connectionType: 'Kubernetes Service Connection'
             kubernetesServiceEndpoint: '$(AKS_SERVICE_CONNECTION)'
             command: 'get'
-            arguments: 'nodes -o json'
+            arguments: 'pods -n java'
 
 
         # Replace backend image in manifest
