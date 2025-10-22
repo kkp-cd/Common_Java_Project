@@ -132,6 +132,15 @@ stages:
       steps:
         - checkout: self
 
+        - task: Kubernetes@1
+          displayName: 'Test AKS Service Connection'
+          inputs:
+            connectionType: 'Kubernetes Service Connection'
+            kubernetesServiceEndpoint: '$(AKS_SERVICE_CONNECTION)'
+            command: 'get'
+            arguments: 'pods -n java'
+
+
         # Replace backend image in manifest
         - script: |
             sed -i "s|image:.*|image: $(BACKEND_IMAGE)|" $(DEPLOYMENT_BACKEND)
@@ -142,6 +151,15 @@ stages:
             sed -i "s|image:.*|image: $(FRONTEND_IMAGE)|" $(DEPLOYMENT_FRONTEND)
           displayName: 'Update Frontend Image Tag'
 
+        # Deploy Frontend
+        - task: KubernetesManifest@1
+          displayName: 'Deploy Frontend to AKS'
+          inputs:
+            action: 'deploy'
+            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
+            namespace: '$(AKS_NAMESPACE)'
+            manifests: '$(DEPLOYMENT_FRONTEND)'
+
         # Deploy Backend
         - task: KubernetesManifest@1
           displayName: 'Deploy Backend to AKS'
@@ -151,14 +169,7 @@ stages:
             namespace: '$(AKS_NAMESPACE)'
             manifests: '$(DEPLOYMENT_BACKEND)'
 
-        # Deploy Frontend
-        - task: KubernetesManifest@1
-          displayName: 'Deploy Frontend to AKS'
-          inputs:
-            action: 'deploy'
-            kubernetesServiceConnection: '$(AKS_SERVICE_CONNECTION)'
-            namespace: '$(AKS_NAMESPACE)'
-            manifests: '$(DEPLOYMENT_FRONTEND)'
+
 
         # Ingress Deployment (must be last)
         - task: KubernetesManifest@1
