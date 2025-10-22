@@ -27,7 +27,8 @@ stages:
               #mavenOptions: '-Xmx3072m'
               #publishJUnitResults: true
               #testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              goals: 'clean package -DskipTests=true'
+              goals: 'deploy -DskipTests=true'
+            displayName: 'Maven deploy – build & publish'
 
           - task: SonarQubePrepare@7
             inputs:
@@ -71,19 +72,19 @@ stages:
             inputs:
               pollingTimeoutSec: '300'
 
-          - task: PublishBuildArtifacts@1
-            inputs:
-              PathtoPublish: 'frontend/target'
-              ArtifactName: 'frontend-drop'
-              publishLocation: 'Container'
-            displayName: 'Publish Frontend Artifact'
+          # - task: PublishBuildArtifacts@1
+          #   inputs:
+          #     PathtoPublish: 'frontend/target'
+          #     ArtifactName: 'frontend-drop'
+          #     publishLocation: 'Container'
+          #   displayName: 'Publish Frontend Artifact'
 
-          - task: PublishBuildArtifacts@1
-            inputs:
-              PathtoPublish: 'backend/target'
-              ArtifactName: 'backend-drop'
-              publishLocation: 'Container'
-            displayName: 'Publish Backend Artifact'
+          # - task: PublishBuildArtifacts@1
+          #   inputs:
+          #     PathtoPublish: 'backend/target'
+          #     ArtifactName: 'backend-drop'
+          #     publishLocation: 'Container'
+          #   displayName: 'Publish Backend Artifact'
 
 # Stage 2: Build & Push Docker Image
 
