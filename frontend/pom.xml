@@ -5,7 +5,7 @@
     <name>frontend</name>
     <description>Project App using Spring boot - Frontend</description>
     <packaging>jar</packaging>
-    <version>1.0-RELEASE</version>
+    <!-- <version>1.0-RELEASE</version> I have removed this -->
     <parent>
         <groupId>adi</groupId>
         <artifactId>Project</artifactId>
