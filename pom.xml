@@ -23,6 +23,30 @@
         <module>backend</module>
 
     </modules>
+<repositories>
+<repository>
+  <id>JAVA_PROJECT_Kiran</id>
+  <url>https://pkgs.dev.azure.com/Krishna-B11/_packaging/JAVA_PROJECT_Kiran/maven/v1</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
+</repositories>
 
+<distributionManagement>
+<repository>
+  <id>JAVA_PROJECT_Kiran</id>
+  <url>https://pkgs.dev.azure.com/Krishna-B11/_packaging/JAVA_PROJECT_Kiran/maven/v1</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
+</distributionManagement>
 
 </project>
