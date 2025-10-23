@@ -5,11 +5,11 @@
     <name>frontend</name>
     <description>Project App using Spring boot - Frontend</description>
     <packaging>jar</packaging>
-    <version>1.0-RELEASE</version>
+    <version>1.0-SNAPSHOT</version>
     <parent>
         <groupId>adi</groupId>
         <artifactId>Project</artifactId>
-        <version>1.0-RELEASE</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
 
