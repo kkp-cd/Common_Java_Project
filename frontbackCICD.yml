@@ -31,13 +31,13 @@ stages:
       steps:
         - checkout: self
         # Build both frontend and backend
-        - task: Maven@4
-          displayName: 'Build All Modules (Parent POM)'
-          inputs:
-            mavenPomFile: 'pom.xml'      # Parent POM path
-            goals: 'clean package -DskipTests=true'
+        #- task: Maven@4
+        #  displayName: 'Build All Modules (Parent POM)'
+        #  inputs:
+        #    mavenPomFile: 'pom.xml'      # Parent POM path
+        #   goals: 'clean package -DskipTests=true'
         
-        # Maven deploy (push to Azure Artifacts)
+        # Maven deploy (install artifact and push to Azure Artifacts)
         - task: Maven@4
           displayName: 'Maven deploy to Azure Artifacts'
           inputs:
