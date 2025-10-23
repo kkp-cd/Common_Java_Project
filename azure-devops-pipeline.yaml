@@ -27,8 +27,8 @@ stages:
               #mavenOptions: '-Xmx3072m'
               #publishJUnitResults: true
               #testResultsFiles: '**/surefire-reports/TEST-*.xml'
-              goals: 'deploy -DskipTests=true'
-              options: '-Drevision=1.0.$(Build.BuildId)-SNAPSHOT'
+              goals: 'deploy'
+              options: '-DskipTests=true -Drevision=1.0.$(Build.BuildId)-SNAPSHOT'
             displayName: 'Maven deploy – build & publish'
 
           - task: SonarQubePrepare@7
