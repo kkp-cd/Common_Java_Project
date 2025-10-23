@@ -6,13 +6,15 @@
     <name>Project</name>
     <description>Project App using Spring boot</description>
     <packaging>pom</packaging>
-    <version>1.0-RELEASE</version>
+    <!-- <version>1.0-RELEASE</version> this is hard coded which i changed as below-->
+    <version>${revision}</version>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.3.5.RELEASE</version>
     </parent>
     <properties>
+        <revision>1.0-SNAPSHOT</revision> <!-- this i have added -->
         <java.version>1.7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
