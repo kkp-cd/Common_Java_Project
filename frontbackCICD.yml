@@ -36,6 +36,13 @@ stages:
           inputs:
             mavenPomFile: 'pom.xml'      # Parent POM path
             goals: 'clean package -DskipTests=true'
+        
+        # Maven deploy (push to Azure Artifacts)
+        - task: Maven@4
+          displayName: 'Maven deploy to Azure Artifacts'
+          inputs:
+            mavenPomFile: 'pom.xml'
+            goals: 'clean deploy'
 
         - task: SonarQubePrepare@7
           inputs:
