@@ -9,7 +9,7 @@
     <parent>
         <groupId>adi</groupId>
         <artifactId>Project</artifactId>
-        <version>1.0-RELEASE</version>
+        <!-- <version>1.0-RELEASE</version> I have removed this one-->
     </parent>
     <dependencies>
         <dependency>
