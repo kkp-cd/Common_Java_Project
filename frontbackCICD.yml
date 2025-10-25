@@ -1,4 +1,7 @@
-trigger: none
+trigger:
+  branches:
+    include:
+      - revert-1-adikarthik-patch-1
 
 variables:
   ACR_NAME: myacrkrishnakiran2
